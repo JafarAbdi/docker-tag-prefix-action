@@ -1,0 +1,35 @@
+name: docker-tag-prefix-action
+description: Get docker tag prefix from the current branch
+outputs:
+  prefix:
+    description: Image tag prefix
+    value: ${{ steps.current-branch.outputs.prefix }}
+runs:
+  using: composite
+  steps:
+    # Inspired by https://github.com/tj-actions/branch-names/blob/main/action.yml
+    - id: current-branch
+      run: |
+        CURRENT_BRANCH=""
+        if [[ "${{ github.ref }}" != "refs/tags/"* ]]; then
+          HEAD_REF=$(printf "%q" "${{ github.head_ref }}")
+          REF=$(printf "%q" "${{ github.ref }}")
+          HEAD_REF=${HEAD_REF/refs\/heads\//}
+          REF_BRANCH=${REF/refs\/pull\//}
+          REF_BRANCH=${REF_BRANCH/refs\/heads\//}
+          if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+            CURRENT_BRANCH=$HEAD_REF
+          else
+            CURRENT_BRANCH=$REF_BRANCH
+          fi
+        else
+          REF=$(printf "%q" "${{ github.ref }}")
+          REF_BRANCH=${REF/refs\/tags\//}
+          CURRENT_BRANCH=$REF_BRANCH
+        fi
+        PREFIX=""
+        if [[ $CURRENT_BRANCH != "main" ]]; then
+          PREFIX="$CURRENT_BRANCH-"
+        fi
+        echo "::set-output name=prefix::${PREFIX}"
+      shell: bash
