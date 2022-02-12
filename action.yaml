@@ -31,5 +31,6 @@ runs:
         if [[ $CURRENT_BRANCH != "main" ]]; then
           PREFIX="$CURRENT_BRANCH-"
         fi
+        echo Docker tag prefix is '${PREFIX}'
         echo "::set-output name=prefix::${PREFIX}"
       shell: bash
