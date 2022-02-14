@@ -1,5 +1,9 @@
 name: docker-tag-prefix-action
 description: Get docker tag prefix from the current branch
+inputs:
+  pr_changed_files:
+    description: Whether this PR changes files or not
+    required: true
 outputs:
   prefix:
     description: Image tag prefix
@@ -29,7 +33,9 @@ runs:
         fi
         PREFIX=""
         if [[ $CURRENT_BRANCH != "main" ]]; then
-          PREFIX="$CURRENT_BRANCH-"
+          if [[ ${{ inputs.pr_changed_files }} == 'true' ]]; then
+            PREFIX="$CURRENT_BRANCH-"
+          fi
         fi
         echo Docker tag prefix is '${PREFIX}'
         echo "::set-output name=prefix::${PREFIX}"
