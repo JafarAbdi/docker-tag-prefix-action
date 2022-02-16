@@ -33,7 +33,7 @@ runs:
         fi
         PREFIX=""
         if [[ $CURRENT_BRANCH != "main" ]]; then
-          if [[ ${{ inputs.pr_changed_files }} == 'true' ]]; then
+          if [[ '${{ inputs.pr_changed_files }}' == 'true' ]]; then
             PREFIX="$CURRENT_BRANCH-"
           fi
         fi
