@@ -3,7 +3,7 @@ description: Get docker tag prefix from the current branch
 inputs:
   pr_changed_files:
     description: Whether this PR changes files or not
-    required: true
+    # required: true
     default: 'true'
 outputs:
   prefix:
